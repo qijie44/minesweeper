@@ -1,0 +1,20 @@
+Mines left:
+mines_hundreds - id
+mines_tens - id
+mines_ones - id
+time0-9 - class
+
+Reset button:
+face - id
+facesmile - class
+
+Cells:
+row_column - id
+square blanks - class
+square open0-4 - class
+
+Time:
+seconds_hundreds - id
+seconds_tens - id
+seconds_ones - id
+time0-9 - class
