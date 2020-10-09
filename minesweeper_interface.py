@@ -29,6 +29,7 @@ def get_time(driver):
 
 def click_cell(x, y, driver):
     cell = driver.find_element_by_id("{}_{}".format(x, y))
+    print("clicked: {},{}".format(x,y))
     cell.click()
 
 def reset(driver):
