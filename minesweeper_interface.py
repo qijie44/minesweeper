@@ -12,6 +12,7 @@ def get_board_state(driver):
             for i in range(0, 5):
                 if str(i) in cell_content:
                     board[x - 1][y - 1] = i
+    board = np.pad(board, 2, mode="constant", constant_values=0)
     return board
 
 def mines_left(driver):
@@ -32,3 +33,9 @@ def click_cell(x, y, driver):
 
 def reset(driver):
     driver.find_element_by_id("face").click()
+
+def check_death(driver):
+    if driver.find_element_by_id("face").get_attribute("class") == "facesmile":
+        return False
+    else:
+        return True
