@@ -23,7 +23,7 @@ def check_unclicked(board, height, width, game):
                 #print("width: {}, {}".format(w-2, w+3))
                 array = board[h-2:h+3, w-2:w+3]
                 # forcing checks only on arrays with at least 3 labelled cells to get useful information
-                if ((25 == a) | (a == 100)).sum() < 23:
+                if ((25 == array) | (array == 100)).sum() < 23:
                     if game != 0:
                         prediction = model(np.array([array]))
                         probability = tf.nn.softmax(prediction).numpy()
@@ -72,14 +72,14 @@ mi.click_cell(1, 1, driver)
 # a counter to check how many games were played
 game = 0
 
-while game < 10:
+while game < 1000:
     if not mi.check_death(driver):
         board = mi.get_board_state(driver)
         height, width = board.shape
         array = check_unclicked(board, height, width, game)
         replay_memory[0].append(array)
         if not mi.check_death(driver):
-            replay_memory[1].append(1)
+            replay_memory[1].append(0.99)
         else:
             replay_memory[1].append(0)
     else:
