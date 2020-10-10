@@ -26,13 +26,12 @@ def check_unclicked(board, height, width, game):
                 if ((25 == array) | (array == 100)).sum() < 23:
                     if game != 0:
                         prediction = model(np.array([array]))
-                        probability = tf.nn.softmax(prediction).numpy()
+                        probability = prediction.numpy()
                         print("array:")
                         print(array)
                         print("probability: {}".format(probability))
                         # fake epsilon greedy function
                         if np.log10(game) > r.random():
-
                             if probability == 1:
                                 mi.click_cell(h-1, w-1, driver)
                                 return array
@@ -60,7 +59,7 @@ model.add(tf.keras.layers.Flatten(input_shape=(5, 5)))
 # 1 dense layers with 25 units and ReLU activation
 model.add(tf.keras.layers.Dense(25, activation="relu"))
 # q dense layer with 25 units and linear activation
-model.add(tf.keras.layers.Dense(1, activation="linear"))
+model.add(tf.keras.layers.Dense(1, activation="sigmoid"))
 # using cross entropy as the loss function
 loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
 model.compile(optimizer="adam", loss=loss_fn, metrics=['accuracy'])
