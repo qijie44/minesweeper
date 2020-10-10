@@ -23,7 +23,7 @@ def check_unclicked(board, height, width, game):
                 #print("width: {}, {}".format(w-2, w+3))
                 array = board[h-2:h+3, w-2:w+3]
                 # forcing checks only on arrays with at least 3 labelled cells to get useful information
-                if ((25 == array) | (array == 100)).sum() < 23:
+                if ((0 == array) | (array == 100)).sum() < 23:
                     if game != 0:
                         prediction = model(np.array([array]))
                         probability = prediction.numpy()
