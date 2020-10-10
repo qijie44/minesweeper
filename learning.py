@@ -76,7 +76,7 @@ while game < 10:
         height, width = board.shape
         array = check_unclicked(board, height, width, game)
         replay_memory[0].append(array)
-        if not mi.check_death:
+        if not mi.check_death(driver):
             replay_memory[1].append(1)
         else:
             replay_memory[1].append(0)
