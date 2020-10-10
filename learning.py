@@ -1,6 +1,6 @@
 """
 Well, it can play and train continuously, but it's really crappy
-TODO: insert skips when the whole array is -np.inf or 0 (it's equivalent coin toss then)
+Done: insert skips when the whole array is -np.inf or 0 (it's equivalent coin toss then)
 TODO: maybe properly implement an epsilon greedy function (need to read up first)
 TODO: implement the save and load models (read https://www.tensorflow.org/tutorials/keras/save_and_load)
 TODO: look up why the loss is nan (fixed, was using np.inf) and accuracy 1 (def something wrong with the model here)
@@ -22,25 +22,27 @@ def check_unclicked(board, height, width, game):
                 #print("height: {}, {}".format(h-2, h+3))
                 #print("width: {}, {}".format(w-2, w+3))
                 array = board[h-2:h+3, w-2:w+3]
-                if game != 0:
-                    prediction = model(np.array([array]))
-                    probability = tf.nn.softmax(prediction).numpy()
-                    print("array:")
-                    print(array)
-                    print("probability: {}".format(probability))
-                    # fake epsilon greedy function
-                    if np.log10(game) > r.random():
+                # forcing checks only on arrays with at least 3 labelled cells to get useful information
+                if ((25 == a) | (a == 100)).sum() < 23:
+                    if game != 0:
+                        prediction = model(np.array([array]))
+                        probability = tf.nn.softmax(prediction).numpy()
+                        print("array:")
+                        print(array)
+                        print("probability: {}".format(probability))
+                        # fake epsilon greedy function
+                        if np.log10(game) > r.random():
 
-                        if probability == 1:
-                            mi.click_cell(h-1, w-1, driver)
+                            if probability == 1:
+                                mi.click_cell(h-1, w-1, driver)
+                                return array
+                        else:
+                            # explore!
+                            mi.click_cell(h - 1, w - 1, driver)
                             return array
                     else:
-                        # explore!
-                        mi.click_cell(h - 1, w - 1, driver)
+                        mi.click_cell(h-1, w-1, driver)
                         return array
-                else:
-                    mi.click_cell(h-1, w-1, driver)
-                    return array
 
 
 # Initialise replay memory, 1st array is a list of 5x5 arrays, 2nd array
