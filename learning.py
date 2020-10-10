@@ -3,7 +3,7 @@ Well, it can play and train continuously, but it's really crappy
 TODO: insert skips when the whole array is -np.inf or 0 (it's equivalent coin toss then)
 TODO: maybe properly implement an epsilon greedy function (need to read up first)
 TODO: implement the save and load models (read https://www.tensorflow.org/tutorials/keras/save_and_load)
-TODO: look up why the loss is nan and accuracy 1 (def something wrong with the model here)
+TODO: look up why the loss is nan (fixed, was using np.inf) and accuracy 1 (def something wrong with the model here)
 """
 
 import tensorflow as tf
@@ -17,15 +17,20 @@ import random as r
 def check_unclicked(board, height, width, game):
     for h in range(2, height - 1):
         for w in range(2, width - 1):
-            if board[h, w] == -np.inf:
-                print("height: {}, {}".format(h-2, h+3))
-                print("width: {}, {}".format(w-2, w+3))
+            # putting 100 here, as -np.inf is causing the prediction to go to nan
+            if board[h, w] == 100:
+                #print("height: {}, {}".format(h-2, h+3))
+                #print("width: {}, {}".format(w-2, w+3))
                 array = board[h-2:h+3, w-2:w+3]
                 if game != 0:
                     prediction = model(np.array([array]))
                     probability = tf.nn.softmax(prediction).numpy()
+                    print("array:")
+                    print(array)
+                    print("probability: {}".format(probability))
                     # fake epsilon greedy function
                     if np.log10(game) > r.random():
+
                         if probability == 1:
                             mi.click_cell(h-1, w-1, driver)
                             return array
@@ -79,7 +84,8 @@ while game < 10:
         # pulling the data from replay_memory
         (x_train, y_train) = replay_memory
         # training the nn
-        print("training:{}".format(np.array(x_train).shape))
+        print("x: {}".format(x_train))
+        print("y: {}".format(y_train))
         model.fit(np.array(x_train), np.array(y_train), epochs=len(x_train))
         # clean out the replay memory, reset the game and add to the game counter
         replay_memory = [[], []]

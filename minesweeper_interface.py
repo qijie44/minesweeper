@@ -8,7 +8,8 @@ def get_board_state(driver):
             cell = driver.find_element_by_id("{}_{}".format(x, y))
             cell_content = cell.get_attribute("class")
             if "blank" in cell_content:
-                board[x - 1][y - 1] = -np.inf
+                # putting 100 here, as -np.inf is causing the prediction to go to nan
+                board[x - 1][y - 1] = 100
             for i in range(0, 5):
                 if str(i) in cell_content:
                     board[x - 1][y - 1] = i
