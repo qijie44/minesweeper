@@ -17,7 +17,7 @@ import random as r
 def check_unclicked(board, height, width, game):
     for h in range(2, height - 1):
         for w in range(2, width - 1):
-            # putting 100 here, as -np.inf is causing the prediction to go to nan
+            # putting 1 here, as -np.inf is causing the prediction to go to nan
             if board[h, w] == 1:
                 #print("height: {}, {}".format(h-2, h+3))
                 #print("width: {}, {}".format(w-2, w+3))
@@ -60,9 +60,10 @@ else:
     # Initialise the nn. It should take a 5x5 matrix and output a reward (inverse of probability)
     model = tf.keras.models.Sequential(())
     model.add(tf.keras.layers.Flatten(input_shape=(5, 5)))
-    # 1 dense layers with 25 units and ReLU activation
+    # 2 dense layers with 25 units and ReLU activation
     model.add(tf.keras.layers.Dense(25, activation="relu"))
-    # q dense layer with 25 units and linear activation
+    model.add(tf.keras.layers.Dense(25, activation="relu"))
+    # 1 dense layer with 25 units and sigmoid activation
     model.add(tf.keras.layers.Dense(1, activation="sigmoid"))
     # using cross entropy as the loss function
     loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
