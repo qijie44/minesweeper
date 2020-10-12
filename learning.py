@@ -12,6 +12,7 @@ import numpy as np
 import time as t
 import minesweeper_interface as mi
 import random as r
+from os import path
 
 
 def check_unclicked(board, height, width, game):
@@ -49,7 +50,6 @@ replay_memory = [[], []]
 
 # start the browser and load the game
 chromeOptions = webdriver.ChromeOptions()
-chromeOptions.add_argument("--start-maximized")
 driver = webdriver.Chrome(options=chromeOptions)
 driver.get('http://minesweeperonline.com/#')
 
