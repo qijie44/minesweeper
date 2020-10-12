@@ -8,12 +8,12 @@ def get_board_state(driver):
             cell = driver.find_element_by_id("{}_{}".format(x, y))
             cell_content = cell.get_attribute("class")
             if "blank" in cell_content:
-                # putting 100 here, as -np.inf is causing the prediction to go to nan
-                board[x - 1][y - 1] = 100
+                # putting 1 here, as -np.inf is causing the prediction to go to nan
+                board[x - 1][y - 1] = 1
             for i in range(0, 9):
                 if str(i) in cell_content:
-                    board[x - 1][y - 1] = i
-    board = np.pad(board, 2, mode="constant", constant_values=0)
+                    board[x - 1][y - 1] = i/10
+    board = np.pad(board, 2, mode="constant", constant_values=0.9)
     return board
 
 def mines_left(driver):

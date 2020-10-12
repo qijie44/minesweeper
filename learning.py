@@ -18,12 +18,12 @@ def check_unclicked(board, height, width, game):
     for h in range(2, height - 1):
         for w in range(2, width - 1):
             # putting 100 here, as -np.inf is causing the prediction to go to nan
-            if board[h, w] == 100:
+            if board[h, w] == 1:
                 #print("height: {}, {}".format(h-2, h+3))
                 #print("width: {}, {}".format(w-2, w+3))
                 array = board[h-2:h+3, w-2:w+3]
                 # forcing checks only on arrays with at least 5 labelled cells to get useful information
-                if ((0 == array) | (array == 100)).sum() < 21:
+                if ((0.9 == array) | (array == 1)).sum() < 21:
                     if game != 0:
                         prediction = model(np.array([array]))
                         probability = prediction.numpy()
