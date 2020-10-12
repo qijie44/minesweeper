@@ -25,24 +25,28 @@ def check_unclicked(board, height, width, game):
                 array = board[h-2:h+3, w-2:w+3]
                 # forcing checks only on arrays with at least 5 labelled cells to get useful information
                 if ((0.9 == array) | (array == 1)).sum() < 21:
-                    if game != 0:
-                        prediction = model(np.array([array]))
-                        probability = prediction.numpy()
-                        print("array:")
-                        print(array)
-                        print("probability: {}".format(probability))
-                        # fake epsilon greedy function
-                        if np.log10(game) > r.random():
-                            if probability == 1:
-                                mi.click_cell(h-1, w-1, driver)
+                    subarray = array[1:-1,1:-1]
+                    print(subarray)
+                    # making sure that there's at least 1 revealed cell beside the cell being evaluated
+                    if ((0.9 == subarray) | (subarray == 1)).sum() != 9:
+                        if game != 0:
+                            prediction = model(np.array([array]))
+                            probability = prediction.numpy()
+                            print("array:")
+                            print(array)
+                            print("probability: {}".format(probability))
+                            # fake epsilon greedy function
+                            if np.log10(game) > r.random():
+                                if probability == 1:
+                                    mi.click_cell(h-1, w-1, driver)
+                                    return array
+                            else:
+                                # explore!
+                                mi.click_cell(h - 1, w - 1, driver)
                                 return array
                         else:
-                            # explore!
-                            mi.click_cell(h - 1, w - 1, driver)
+                            mi.click_cell(h-1, w-1, driver)
                             return array
-                    else:
-                        mi.click_cell(h-1, w-1, driver)
-                        return array
 
 
 # Initialise replay memory, 1st array is a list of 5x5 arrays, 2nd array
