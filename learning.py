@@ -53,16 +53,20 @@ chromeOptions.add_argument("--start-maximized")
 driver = webdriver.Chrome(options=chromeOptions)
 driver.get('http://minesweeperonline.com/#')
 
-# Initialise the nn. It should take a 5x5 matrix and output a reward (inverse of probability)
-model = tf.keras.models.Sequential(())
-model.add(tf.keras.layers.Flatten(input_shape=(5, 5)))
-# 1 dense layers with 25 units and ReLU activation
-model.add(tf.keras.layers.Dense(25, activation="relu"))
-# q dense layer with 25 units and linear activation
-model.add(tf.keras.layers.Dense(1, activation="sigmoid"))
-# using cross entropy as the loss function
-loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-model.compile(optimizer="adam", loss=loss_fn, metrics=['accuracy'])
+# if a previous model exists
+if path.isdir("minesweeper_model"):
+    model = tf.keras.models.load_model("minesweeper_model")
+else:
+    # Initialise the nn. It should take a 5x5 matrix and output a reward (inverse of probability)
+    model = tf.keras.models.Sequential(())
+    model.add(tf.keras.layers.Flatten(input_shape=(5, 5)))
+    # 1 dense layers with 25 units and ReLU activation
+    model.add(tf.keras.layers.Dense(25, activation="relu"))
+    # q dense layer with 25 units and linear activation
+    model.add(tf.keras.layers.Dense(1, activation="sigmoid"))
+    # using cross entropy as the loss function
+    loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+    model.compile(optimizer="adam", loss=loss_fn, metrics=['accuracy'])
 model.summary()
 
 t.sleep(3)
@@ -88,9 +92,10 @@ while game < 1000:
         print("x: {}".format(x_train))
         print("y: {}".format(y_train))
         model.fit(np.array(x_train), np.array(y_train), epochs=len(x_train))
-        # clean out the replay memory, reset the game and add to the game counter
+        # clean out the replay memory, reset the game, add to the game counter and save the model
         replay_memory = [[], []]
         mi.reset(driver)
         game += 1
+        model.save("minesweeper_model")
         t.sleep(3)
         mi.click_cell(1, 1, driver)
