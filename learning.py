@@ -60,7 +60,7 @@ driver.get('http://minesweeperonline.com/#')
 # if a previous model exists
 if path.isdir("minesweeper_model"):
     model = tf.keras.models.load_model("minesweeper_model")
-    full_memory = np.load("minesweeper_model/full_memory")
+    full_memory = np.load("minesweeper_model/full_memory.npy")
 else:
     # Initialise the nn. It should take a 5x5 matrix and output a reward (inverse of probability)
     model = tf.keras.models.Sequential(())
