@@ -60,6 +60,7 @@ driver.get('http://minesweeperonline.com/#')
 # if a previous model exists
 if path.isdir("minesweeper_model"):
     model = tf.keras.models.load_model("minesweeper_model")
+    full_memory = np.load("minesweeper_model/full_memory")
 else:
     # Initialise the nn. It should take a 5x5 matrix and output a reward (inverse of probability)
     model = tf.keras.models.Sequential(())
@@ -72,6 +73,7 @@ else:
     # using cross entropy as the loss function
     loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
     model.compile(optimizer="adam", loss=loss_fn, metrics=['accuracy'])
+    full_memory = [[], []]
 model.summary()
 
 t.sleep(3)
@@ -85,11 +87,15 @@ while game < 1000:
         board = mi.get_board_state(driver)
         height, width = board.shape
         array = check_unclicked(board, height, width, game)
+        print(array)
         replay_memory[0].append(array)
+        full_memory[0].append(array)
         if not mi.check_death(driver):
             replay_memory[1].append(0.99)
+            full_memory[1].append(0.99)
         else:
             replay_memory[1].append(0)
+            full_memory[1].append(0)
     else:
         # pulling the data from replay_memory
         (x_train, y_train) = replay_memory
