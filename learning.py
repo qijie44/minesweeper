@@ -77,7 +77,7 @@ else:
 model.summary()
 
 t.sleep(3)
-mi.click_cell(1, 1, driver)
+mi.click_cell(5, 5, driver)
 
 # a counter to check how many games were played
 game = 0
@@ -108,5 +108,6 @@ while game < 1000:
         mi.reset(driver)
         game += 1
         model.save("minesweeper_model")
+        np.save(r"minesweeper_model/full_memory", full_memory)
         t.sleep(3)
-        mi.click_cell(1, 1, driver)
+        mi.click_cell(5, 5, driver)
