@@ -1,9 +1,9 @@
 """
 Well, it can play and train continuously, but it's really crappy
 Done: insert skips when the whole array is -np.inf or 0 (it's equivalent coin toss then)
-TODO: maybe properly implement an epsilon greedy function (need to read up first)
-TODO: implement the save and load models (read https://www.tensorflow.org/tutorials/keras/save_and_load)
-TODO: look up why the loss is nan (fixed, was using np.inf) and accuracy 1 (def something wrong with the model here)
+Done: maybe properly implement an epsilon greedy function (need to read up first)
+DONE: implement the save and load models (read https://www.tensorflow.org/tutorials/keras/save_and_load)
+DONE: look up why the loss is nan (fixed, was using np.inf) and accuracy 1 (def something wrong with the model here)
 """
 
 import tensorflow as tf
@@ -36,8 +36,8 @@ def check_unclicked(board, height, width, game):
                             print("array:")
                             print(array)
                             print("probability: {}".format(probability))
-                            # fake epsilon greedy function
-                            if np.log10(game) > r.random():
+                            # epsilon greedy function
+                            if 0.1 > r.random():
                                 if probability == 1:
                                     mi.click_cell(h-1, w-1, driver)
                                     return array, probability
