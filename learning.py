@@ -13,6 +13,7 @@ import time as t
 import minesweeper_interface as mi
 import random as r
 from os import path
+import pickle as p
 
 
 def check_unclicked(board, height, width, game):
@@ -39,14 +40,14 @@ def check_unclicked(board, height, width, game):
                             if np.log10(game) > r.random():
                                 if probability == 1:
                                     mi.click_cell(h-1, w-1, driver)
-                                    return array
+                                    return array, probability
                             else:
                                 # explore!
                                 mi.click_cell(h - 1, w - 1, driver)
-                                return array
+                                return array, "explore"
                         else:
                             mi.click_cell(h-1, w-1, driver)
-                            return array
+                            return array, "nil"
 
 
 # Initialise replay memory, 1st array is a list of 5x5 arrays, 2nd array
@@ -60,7 +61,7 @@ driver.get('http://minesweeperonline.com/#')
 # if a previous model exists
 if path.isdir("minesweeper_model"):
     model = tf.keras.models.load_model("minesweeper_model")
-    full_memory = np.load("minesweeper_model/full_memory.npy")
+    full_memory = p.load(open("minesweeper_model/full_memory", "rb"))
 else:
     # Initialise the nn. It should take a 5x5 matrix and output a reward (inverse of probability)
     model = tf.keras.models.Sequential(())
@@ -73,7 +74,7 @@ else:
     # using cross entropy as the loss function
     loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
     model.compile(optimizer="adam", loss=loss_fn, metrics=['accuracy'])
-    full_memory = [[], []]
+    full_memory = [[], [], []]
 model.summary()
 
 t.sleep(3)
@@ -86,10 +87,11 @@ while game < 1000:
     if not mi.check_death(driver):
         board = mi.get_board_state(driver)
         height, width = board.shape
-        array = check_unclicked(board, height, width, game)
+        array, prediction = check_unclicked(board, height, width, game)
         print(array)
         replay_memory[0].append(array)
         full_memory[0].append(array)
+        full_memory[2].append(prediction)
         if not mi.check_death(driver):
             replay_memory[1].append(0.99)
             full_memory[1].append(0.99)
@@ -108,6 +110,6 @@ while game < 1000:
         mi.reset(driver)
         game += 1
         model.save("minesweeper_model")
-        np.save(r"minesweeper_model/full_memory", full_memory)
+        p.dump(full_memory, open(r"minesweeper_model/full_memory", "wb"))
         t.sleep(3)
         mi.click_cell(5, 5, driver)
