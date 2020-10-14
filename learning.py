@@ -37,7 +37,7 @@ def check_unclicked(board, height, width, game):
                             print(array)
                             print("probability: {}".format(probability))
                             # epsilon greedy function
-                            if 0.1 > r.random():
+                            if 0.1 < r.random():
                                 if probability == 1:
                                     mi.click_cell(h-1, w-1, driver)
                                     return array, probability
