@@ -3,7 +3,7 @@ Well, it can play and train continuously, but it's really crappy
 Done: insert skips when the whole array is -np.inf or 0 (it's equivalent coin toss then)
 Done: maybe properly implement an epsilon greedy function (need to read up first)
 DONE: implement the save and load models (read https://www.tensorflow.org/tutorials/keras/save_and_load)
-DONE: look up why the loss is nan (fixed, was using np.inf) and accuracy 1 (def something wrong with the model here)
+DONE: look up why the loss is nan (fixed, was using np.inf) and accuracy 1 (fixed by normalising the data in)
 """
 
 import tensorflow as tf
@@ -17,6 +17,7 @@ import pickle as p
 
 
 def check_unclicked(board, height, width, game):
+    predictions = [[], [], []]
     for h in range(2, height - 1):
         for w in range(2, width - 1):
             # putting 1 here, as -np.inf is causing the prediction to go to nan
@@ -27,28 +28,35 @@ def check_unclicked(board, height, width, game):
                 # forcing checks only on arrays with at least 5 labelled cells to get useful information
                 if ((0.9 == array) | (array == 1)).sum() < 21:
                     subarray = array[1:-1,1:-1]
-                    print(subarray)
                     # making sure that there's at least 1 revealed cell beside the cell being evaluated
                     if ((0.9 == subarray) | (subarray == 1)).sum() != 9:
+                        # if it's not the first game, add the option to the prediction list, else just click it for data
                         if game != 0:
-                            prediction = model(np.array([array]))
-                            probability = prediction.numpy()
-                            print("array:")
-                            print(array)
-                            print("probability: {}".format(probability))
-                            # epsilon greedy function
-                            if 0.1 < r.random():
-                                if probability == 1:
-                                    mi.click_cell(h-1, w-1, driver)
-                                    return array, probability
-                            else:
-                                # explore!
-                                mi.click_cell(h - 1, w - 1, driver)
-                                return array, "explore"
+                            predictions[0].append(array)
+                            predictions[1].append(model(np.array([array])).numpy())
+                            predictions[2].append((h, w))
                         else:
                             mi.click_cell(h-1, w-1, driver)
                             return array, "nil"
-
+    # epsilon greedy function
+    if 0.1 < r.random():
+        print("best!")
+        # turning part of the prediction list to array, to easily find the max
+        probability_list = np.array(predictions[1])
+        # getting the index  of the highest probability
+        index = np.argmax(probability_list)
+        #print(index)
+        #print(predictions)
+        probability = predictions[1][index]
+    else:
+        # explore!
+        print("explore!")
+        index = r.randint(0, len(predictions[2])-1)
+        probability = "explore"
+    array = predictions[0][index]
+    h, w = predictions[2][index]
+    mi.click_cell(h - 1, w - 1, driver)
+    return array, probability
 
 # Initialise replay memory, 1st array is a list of 5x5 arrays, 2nd array
 replay_memory = [[], []]
