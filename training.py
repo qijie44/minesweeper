@@ -1,7 +1,10 @@
 import pickle as p
 import numpy as np
+import tensorflow as tf
 
-memory = p.load(open(r"training_data", "wb"))
+with open(r"training_data.p", "rb") as f:
+    unpickler = p.Unpickler(f)
+    memory = unpickler.load()
 print(memory)
 
 x_train = memory[0]

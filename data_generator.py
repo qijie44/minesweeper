@@ -4,7 +4,7 @@ import pickle as p
 
 memory = [[],[]]
 
-for i in range(10000000):
+for i in range(100000):
     bomb_num = int(r.gauss(10.10, 10.10))
     uncovered_squares = r.randint(9,15)
 
@@ -50,4 +50,6 @@ for i in range(10000000):
         memory[0].append(minefield)
         memory[1].append(0.99)
 
-p.dump(memory, open(r"training_data", "wb"))
+with open(r"training_data.p", "wb") as f:
+    p.dump(memory, f)
+    f.close()
