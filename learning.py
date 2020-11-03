@@ -118,6 +118,6 @@ while game < 1000:
         mi.reset(driver)
         game += 1
         model.save("minesweeper_model")
-        p.dump(full_memory, open(r"minesweeper_model/full_memory", "wb"))
+        p.dump(full_memory, open(r"minesweeper_model/full_memory.p", "wb"))
         t.sleep(3)
         mi.click_cell(5, 5, driver)

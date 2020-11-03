@@ -1,0 +1,2 @@
+accuracy goes to 0 when padded with 0.01 (might just be taking longer to train?)
+the loss function is 0 (this is wrong, as it indicates that there is no difference between the model and the dataqq)
