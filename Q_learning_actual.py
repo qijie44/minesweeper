@@ -30,3 +30,7 @@ height, width = board.shape
 print(board)
 print("height:{}".format(height))
 print("width:{}".format(width))
+
+
+t.sleep(10)
+driver.close()

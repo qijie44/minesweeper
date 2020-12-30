@@ -94,7 +94,7 @@ game = 0
 
 while game < 1000:
     if not mi.check_death(driver):
-        board = mi.get_board_state(driver)
+        board = mi.get_padded_board_state(driver)
         height, width = board.shape
         array, prediction = check_unclicked(board, height, width, game)
         print(array)
