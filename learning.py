@@ -81,7 +81,8 @@ else:
     model.add(tf.keras.layers.Dense(1, activation="sigmoid"))
     # using cross entropy as the loss function
     loss_fn = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-    model.compile(optimizer="adam", loss=loss_fn, metrics=['accuracy'])
+    modified_adam = tf.keras.optimizers.Adam(learning_rate=0.00001)
+    model.compile(optimizer=modified_adam, loss=loss_fn, metrics=['accuracy'])
     full_memory = [[], [], []]
 model.summary()
 

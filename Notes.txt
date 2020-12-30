@@ -1,2 +1,4 @@
 accuracy goes to 0 when padded with 0.01 (might just be taking longer to train?)
-the loss function is 0 (this is wrong, as it indicates that there is no difference between the model and the dataqq)
+the loss function is 0 (this is wrong, as it indicates that there is no difference between the model and the data)
+
+modifying the learning rate of the model does not do anything. (DUH, problem likely to be the model)
